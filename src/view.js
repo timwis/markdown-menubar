@@ -15,7 +15,7 @@ module.exports = function View (state, prev, send) {
       ${state.filename
         ? html`<span>Saved as ${state.filename}.md</span>`
         : html`<span>Not saved</span>`}
-      <button class="u-pull-right">New</button>
+      <button class="u-pull-right" onclick=${reset}>New</button>
     </main>
   `
 
@@ -29,6 +29,10 @@ module.exports = function View (state, prev, send) {
       }
       send('save', value)
     }
+  }
+
+  function reset (evt) {
+    send('reset')
   }
 }
 

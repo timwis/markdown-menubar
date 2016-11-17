@@ -7,7 +7,8 @@ module.exports = {
   },
   reducers: {
     setFilename: (filename, state) => ({ filename }),
-    setContents: (contents, state) => ({ contents })
+    setContents: (contents, state) => ({ contents }),
+    reset: (data, state) => module.exports.state
   },
   effects: {
     save: (data, state, send, done) => {

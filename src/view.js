@@ -11,7 +11,8 @@ module.exports = function View (state, prev, send) {
     <main class=${classes.container}>
       <textarea
         class=${classes.textarea}
-        oninput=${debounce(oninput, 300)}>${state.contents}</textarea>
+        oninput=${debounce(oninput, 300)}
+        placeholder="Type your note here">${state.contents}</textarea>
 
       <div class="container">
         <span class=${classes.status}>

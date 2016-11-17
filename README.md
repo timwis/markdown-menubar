@@ -1,7 +1,7 @@
 # Markdown Menubar
 
 Take quick notes from the menu bar in markdown. Saves to a file
-as you type. 
+as you type. **Work in progress**.
 
 ![screenshot](http://i.imgur.com/PfXAHT5.png)
 

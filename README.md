@@ -1,10 +1,9 @@
 # Markdown Menubar
 
 Take quick notes from the menu bar in markdown. Saves to a file
-as you type. Syncs to dropbox/google drive etc. by virtue of
-where the file is saved.
+as you type. 
 
-**Work in progress**
+![screenshot](http://i.imgur.com/PfXAHT5.png)
 
 ## Development
 Install dependencies via

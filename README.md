@@ -15,3 +15,6 @@ Run the application via
 ```bash
 npm start
 ```
+
+## See also
+* [maxogden/menubar](https://github.com/maxogden/menubar)

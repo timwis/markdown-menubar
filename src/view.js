@@ -12,10 +12,13 @@ module.exports = function View (state, prev, send) {
       <textarea
         class=${classes.textarea}
         oninput=${debounce(oninput, 300)}>${state.contents}</textarea>
-      ${state.filename
-        ? html`<span>Saved as ${state.filename}.md</span>`
-        : html`<span>Not saved</span>`}
-      <button class="u-pull-right" onclick=${reset}>New</button>
+
+      <div class="container">
+        <span class=${classes.status}>
+          ${state.filename ? `Saved as ${state.filename}.md` : `Not saved`}
+        </span>
+        <button class="u-pull-right" onclick=${reset}>New</button>
+      </div>
     </main>
   `
 
@@ -48,5 +51,9 @@ const classes = {
     width: '100%',
     height: '349px',
     marginBottom: 0
+  }),
+  status: style({
+    fontSize: '80%',
+    color: '#333'
   })
 }

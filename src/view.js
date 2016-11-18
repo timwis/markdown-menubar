@@ -15,13 +15,26 @@ module.exports = function View (state, prev, send) {
         placeholder="Type your note here">${state.contents}</textarea>
 
       <div class="container">
-        <span class=${classes.status}>
-          ${state.filename ? `Saved as ${state.filename}.md` : `Not saved`}
-        </span>
+        ${StatusIndicator(state.filename)}
         <button class="u-pull-right" onclick=${reset}>New</button>
       </div>
     </main>
   `
+
+  function StatusIndicator (filename) {
+    return filename ? html`
+      <span class=${classes.status}>
+        Saved as
+        <a href="#" onclick=${onClickFilename}>
+          ${state.filename}.md
+        </a>
+      </span>
+    ` : html`
+      <span class=${classes.status}>
+        Not saved
+      </span>
+    `
+  }
 
   function oninput (evt) {
     const value = evt.target.value
@@ -33,6 +46,13 @@ module.exports = function View (state, prev, send) {
       }
       send('save', value)
     }
+  }
+
+  function onClickFilename (evt) {
+    const filePath = `./drafts/${state.filename}.md`
+    send('openExternal', filePath)
+    evt.preventDefault()
+    evt.stopPropagation()
   }
 
   function reset (evt) {

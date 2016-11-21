@@ -2,7 +2,6 @@ const html = require('choo/html')
 const insertCss = require('insert-css')
 const style = require('typestyle').style
 const debounce = require('lodash/debounce')
-const slugify = require('slugify')
 
 insertCss(`html, body { height: 100%; }`)
 
@@ -40,17 +39,12 @@ module.exports = function View (state, prev, send) {
     const value = evt.target.value
     const lines = value.split('\n')
     if (lines.length > 1) { // multiple lines
-      if (!state.filename) {
-        const filename = slugify(lines[0])
-        send('setFilename', filename)
-      }
       send('save', value)
     }
   }
 
   function onClickFilename (evt) {
-    const filePath = `./drafts/${state.filename}.md`
-    send('openExternal', filePath)
+    send('openExternal', state.filename)
     evt.preventDefault()
     evt.stopPropagation()
   }

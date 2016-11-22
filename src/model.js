@@ -4,6 +4,7 @@ const dialog = require('electron').remote.dialog
 const path = require('path')
 const slugify = require('slugify')
 const series = require('run-series')
+const settings = require('electron-settings')
 
 module.exports = {
   state: {
@@ -57,7 +58,7 @@ module.exports = {
 
         const newDirectory = filePaths[0]
         const operations = [
-          (cb) => send('setDirectory', newDirectory, cb)
+          (cb) => send('saveDirectory', newDirectory, cb)
         ]
 
         // If file is already written, also recreate it in new directory
@@ -68,6 +69,19 @@ module.exports = {
         // Run operations sequentially
         series(operations, done)
       })
+    },
+    saveDirectory: (directory, state, send, done) => {
+      settings.set('directory', directory).then(() => {
+        send('setDirectory', directory, done)
+      }).catch(done)
+    }
+  },
+  subscriptions: {
+    getDirectory: (send, done) => {
+      settings.get('directory').then((directory) => {
+        if (!directory) return done()
+        send('setDirectory', directory, done)
+      }).catch(done)
     }
   }
 }

@@ -889,6 +889,10 @@ rimraf@^2.2.8:
   dependencies:
     glob "^7.0.5"
 
+run-series:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/run-series/-/run-series-1.1.4.tgz#89a73ddc5e75c9ef8ab6320c0a1600d6a41179b9"
+
 semver@^5.3.0, "semver@2 || 3 || 4 || 5":
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.3.0.tgz#9b2ce5d3de02d17c6012ad326aa6b4d0cf54f94f"
@@ -1036,6 +1040,10 @@ trim-newlines@^1.0.0:
 trim@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/trim/-/trim-0.0.1.tgz#5858547f6b290757ee95cccc666fb50084c460dd"
+
+truncate-middle:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/truncate-middle/-/truncate-middle-1.0.4.tgz#e1b4fdeccf879240c4115b96de74361791be4dee"
 
 tunnel-agent@~0.4.1:
   version "0.4.3"

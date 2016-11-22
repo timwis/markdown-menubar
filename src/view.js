@@ -2,6 +2,8 @@ const html = require('choo/html')
 const insertCss = require('insert-css')
 const style = require('typestyle').style
 const debounce = require('lodash/debounce')
+const truncateMiddle = require('truncate-middle')
+const slugify = require('slugify')
 
 insertCss(`html, body { height: 100%; }`)
 
@@ -14,7 +16,10 @@ module.exports = function View (state, prev, send) {
         placeholder="Type your note here">${state.contents}</textarea>
 
       <div class="container">
-        ${StatusIndicator(state.filename)}
+        <div class="u-pull-left">
+          ${StatusIndicator(state.filename)}
+          ${DirectoryIndicator(state.directory)}
+        </div>
         <button class="u-pull-right" onclick=${reset}>New</button>
       </div>
     </main>
@@ -35,16 +40,36 @@ module.exports = function View (state, prev, send) {
     `
   }
 
+  function DirectoryIndicator (directory) {
+    return html`
+      <div class=${classes.status}>
+        in
+        <a href="#" onclick=${onClickDirectory}>
+          ${truncateMiddle(directory, 10, 15, '…')}
+        </a>
+      </div>
+    `
+  }
+
   function oninput (evt) {
-    const value = evt.target.value
-    const lines = value.split('\n')
-    if (lines.length > 1) { // multiple lines
-      send('save', value)
+    const contents = evt.target.value
+    if (contents.includes('\n')) { // multiple lines
+      if (state.filename) { // file already exists
+        send('writeFile', contents)
+      } else { // new file
+        send('createFile', contents)
+      }
     }
   }
 
   function onClickFilename (evt) {
-    send('openExternal', state.filename)
+    send('openExternal')
+    evt.preventDefault()
+    evt.stopPropagation()
+  }
+
+  function onClickDirectory (evt) {
+    send('openDialog')
     evt.preventDefault()
     evt.stopPropagation()
   }

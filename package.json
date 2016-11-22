@@ -14,8 +14,10 @@
     "insert-css": "^2.0.0",
     "lodash": "^4.17.2",
     "menubar": "^5.1.0",
+    "run-series": "^1.1.4",
     "skeleton-css": "^2.0.4",
     "slugify": "^1.0.2",
+    "truncate-middle": "^1.0.4",
     "typestyle": "^0.7.3"
   },
   "devDependencies": {

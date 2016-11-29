@@ -1,19 +1,16 @@
 const html = require('choo/html')
 const insertCss = require('insert-css')
 const style = require('typestyle').style
-const debounce = require('lodash/debounce')
 const truncateMiddle = require('truncate-middle')
-const slugify = require('slugify')
+
+const Editor = require('./editor')
 
 insertCss(`html, body { height: 100%; }`)
 
 module.exports = function View (state, prev, send) {
   return html`
     <main class=${classes.container}>
-      <textarea
-        class=${classes.textarea}
-        oninput=${debounce(oninput, 300)}
-        placeholder="Type your note here">${state.contents}</textarea>
+      ${Editor(state.contents, classes.editor, onchange)}
 
       <div class="container">
         <div class="u-pull-left">
@@ -51,14 +48,11 @@ module.exports = function View (state, prev, send) {
     `
   }
 
-  function oninput (evt) {
-    const contents = evt.target.value
+  function onchange (contents) {
     if (contents.includes('\n')) { // multiple lines
-      if (state.filename) { // file already exists
-        send('writeFile', contents)
-      } else { // new file
-        send('createFile', contents)
-      }
+      // If there's no filename, mark it as a new file
+      const payload = { contents, isNew: !state.filename }
+      send('save', payload)
     }
   }
 
@@ -81,16 +75,14 @@ module.exports = function View (state, prev, send) {
 
 const classes = {
   container: style({
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column'
   }),
-  textarea: style({
-    width: '100%',
-    height: '349px',
-    marginBottom: 0
+  editor: style({
+    flex: '1 auto',
+    display: 'flex',
+    flexDirection: 'column'
   }),
   status: style({
     fontSize: '80%',

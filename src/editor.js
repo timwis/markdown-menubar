@@ -26,7 +26,8 @@ module.exports = widget((handleUpdates) => {
     const editor = CodeMirror.fromTextArea(textarea, {
       mode: 'gfm',
       autofocus: true,
-      extraKeys: { 'Enter': 'newlineAndIndentContinueMarkdownList' }
+      extraKeys: { 'Enter': 'newlineAndIndentContinueMarkdownList' },
+      lineWrapping: true
     })
 
     editor.on('change', debounce((instance, change) => {

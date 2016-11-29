@@ -50,11 +50,9 @@ module.exports = function View (state, prev, send) {
 
   function onchange (contents) {
     if (contents.includes('\n')) { // multiple lines
-      if (state.filename) { // file already exists
-        send('writeFile', contents)
-      } else { // new file
-        send('createFile', contents)
-      }
+      // If there's no filename, mark it as a new file
+      const payload = { contents, isNew: !state.filename }
+      send('save', payload)
     }
   }
 

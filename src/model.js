@@ -13,20 +13,23 @@ module.exports = {
     directory: './drafts/'
   },
   reducers: {
-    setFilename: (filename, state) => {
-      console.log('setFilename', filename)
-      return { filename }
-    },
+    setFilename: (filename, state) => ({ filename }),
     setContents: (contents, state) => ({ contents }),
     setDirectory: (directory, state) => ({ directory }),
-    reset: (data, state) => module.exports.state
+    reset: (data, state) => ({ contents: '', filename: '' })
   },
   effects: {
-    createFile: (contents, state, send, done) => {
-      send('nameFile', contents, (err) => {
-        if (err) return done(err)
-        send('writeFile', contents, done)
-      })
+    save: (data, state, send, done) => {
+      const { contents, isNew } = data
+      const ops = [
+        (cb) => send('setContents', contents, cb),
+        (cb) => send('writeFile', contents, cb)
+      ]
+      // If new file, the 2nd operation should be to name it
+      if (isNew) {
+        ops.splice(1, 0, (cb) => send('nameFile', contents, cb))
+      }
+      series(ops, done)
     },
     nameFile: (contents, state, send, done) => {
       const lines = contents.split('\n')
@@ -37,12 +40,9 @@ module.exports = {
       })
     },
     writeFile: (contents, state, send, done) => {
-      // First set the contents in the state, regardless of write success
-      send('setContents', contents, () => {
-        const filePath = path.join(state.directory, state.filename) + '.md'
-        console.log('writing', filePath)
-        fs.writeFile(filePath, contents, done)
-      })
+      const filePath = path.join(state.directory, state.filename) + '.md'
+      console.log('writing', filePath)
+      fs.writeFile(filePath, contents, done)
     },
     openExternal: (data, state, send, done) => {
       const filePath = path.join(state.directory, state.filename) + '.md'
@@ -63,7 +63,8 @@ module.exports = {
 
         // If file is already written, also recreate it in new directory
         if (state.filename) {
-          operations.push((cb) => send('createFile', state.contents, cb))
+          const payload = { contents: state.contents, isNew: true }
+          operations.push((cb) => send('save', payload, cb))
         }
 
         // Run operations sequentially

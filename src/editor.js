@@ -10,7 +10,7 @@ require('codemirror/addon/edit/continuelist')
 insertCss(`.CodeMirror { flex: 1 auto; }`)
 
 module.exports = widget((handleUpdates) => {
-  let changeCallback
+  let changeCallback, editor
 
   const tree = html`
     <div>
@@ -22,8 +22,7 @@ module.exports = widget((handleUpdates) => {
 
   function onload () {
     const textarea = tree.querySelector('textarea')
-    console.log('loaded', textarea)
-    const editor = CodeMirror.fromTextArea(textarea, {
+    editor = CodeMirror.fromTextArea(textarea, {
       mode: 'gfm',
       autofocus: true,
       extraKeys: { 'Enter': 'newlineAndIndentContinueMarkdownList' },
@@ -31,7 +30,8 @@ module.exports = widget((handleUpdates) => {
     })
 
     editor.on('change', debounce((instance, change) => {
-      if (changeCallback) {
+      // setValue is called below. This filter avoids an infinite loop.
+      if (changeCallback && change.origin !== 'setValue') {
         const value = editor.getValue()
         changeCallback(value)
       }
@@ -40,7 +40,10 @@ module.exports = widget((handleUpdates) => {
 
   // Called on construction & at every state update
   handleUpdates((contents, style, newChangeCallback) => {
-    // editor.value = contents
+    // Only change the contents on a reset
+    if (editor && contents === '') {
+      editor.setValue(contents)
+    }
     tree.classList.add(style)
     changeCallback = newChangeCallback
   })

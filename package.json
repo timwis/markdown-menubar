@@ -4,7 +4,10 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "package": "electron-packager ./ --out=bin --all",
+    "archive": "(cd bin && for i in */; do zip -r \"${i%/}.zip\" \"$i\"; done)",
+    "build": "npm run build && npm run archive"
   },
   "keywords": [],
   "author": "timwis <tim@timwis.com>",
@@ -26,6 +29,7 @@
   "devDependencies": {
     "choo-log": "^3.0.0",
     "electron-livereload": "^0.0.2",
+    "electron-packager": "^8.3.0",
     "electron-prebuilt": "^1.4.6"
   }
 }
